@@ -6,6 +6,7 @@
 #include "egg/core/eggHeap.h"
 #include "m/m_angle.h"
 #include "m/m_vec.h"
+#include "sized_string.h"
 #include "toBeSorted/nand_request_thread.h"
 #include "toBeSorted/save_file.h"
 #include "toBeSorted/save_manager.h"
@@ -17,6 +18,10 @@ class SkipData {
 public:
     /** 0x00 */ u16 data[16];
     /** 0x20 */ u32 crc;
+
+    void clear();
+    const u16 *getData() const;
+    u16 *getData();
 };
 
 class SavedSaveFiles {
@@ -32,13 +37,13 @@ public:
 class FileManager {
 public:
     /* 0x0000 */ SavedSaveFiles *mpSavedSaveFiles;
-    /* 0x0004 */ SkipData *mpSkipData; // skip data Arrary (3 entries )
+    /* 0x0004 */ SkipData *mpSkipData; // skip data Arrry (3 entries)
     /* 0x0008 */ SaveFile mFileA;
     /* 0x53C8 */ SaveFile mFileB;
     /* 0xA788 */ SkipData mSkipData;
-    /* 0xA7AC */ wchar_t mHeroNames[3][9]; // each name is 9 wchars
-    /* 0xA7E2 */ wchar_t mHeroName[9];     // The current Hero Name
-    /* 0xA7F4 */ char mCurrentArea[32];
+    /* 0xA7AC */ SizedWString<9> mHeroNames[3];
+    /* 0xA7E2 */ SizedWString<9> mHeroName; // The current Hero Name
+    /* 0xA7F4 */ SizedString<32> mCurrentArea;
     /* 0xA814 */ u32 m_0xA814;
     /* 0xA818 */ s64 mPlayTime[3];
     /* 0xA830 */ s16 mCurrentHealth[3];
@@ -53,6 +58,10 @@ public:
     /* 0xA84D */ u8 m_0xA84D;
     /* 0xA84E */ u8 mAntiCommitFlag;
     /* 0xA84F */ u8 m_0xA84F;
+
+    SkipData *getCurrentSkipData() {
+        return &mSkipData;
+    }
 
 public:
     // the following arent part of FileManager i dont think
@@ -241,13 +250,13 @@ public:
     /* 8000D0B0 */ void checkFileStatus();
     /* 8000D1D0 */ bool checkSkipDataCRCs();
     /* 8000D270 */ void saveOrClearSelectedFileToFileA();
-    /* 8000D280 */ void saveOrClearToFileA(int fileNum);
+    /* 8000D280 */ void saveOrClearToFileA(u32 fileNum);
     /* 8000D9C0 */ void copyFileBToCurrentFile();
     /* 8000E060 */ void copyFileAToSelectedFile();
-    /* 8000E070 */ void copyFileAToFile(int fileNum);
-    /* 8000E7C0 */ void copyFile(int from, int to);
+    /* 8000E070 */ void copyFileAToFile(u32 fileNum);
+    /* 8000E7C0 */ void copyFile(u32 from, u32 to);
     /* 8000EF80 */ void saveFileAToSelectedFile();
-    /* 8000EF90 */ void saveFileAToFile(int fileNum);
+    /* 8000EF90 */ void saveFileAToFile(u32 fileNum);
     /* 8000F730 */ void copyCurrentToFileB();
     /* 8000FDF0 */ void copySelectedFileSkipData();
     /* 8000FE00 */ void copySkipData(u8 fileNum);
@@ -273,7 +282,7 @@ public:
     /* 80011290 */ void updateEmptyFiles();
     /* 800112D0 */ void updateEmptyFileFlags();
     /* 80011370 */ bool isFileEmpty(u8 fileNum);
-    /* 80011390 */ bool isFileDirty(int fileNum);
+    /* 80011390 */ bool isFileDirty(u8 fileNum) const;
     /* 800113B0 */ u32 get_0xA84C();
     /* 800113C0 */ bool checkRegionCode();
     /* 80011440 */ bool checkFileCRC(u8 fileNum);

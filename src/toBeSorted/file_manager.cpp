@@ -1,5 +1,6 @@
 #include "toBeSorted/file_manager.h"
 
+#include "d/flag/flag_managers.h"
 #include "f/f_base.h"
 #include "m/m_heap.h"
 #include "s/s_Crc.h"
@@ -9,6 +10,7 @@
 #include "toBeSorted/dowsing_target.h"
 #include "toBeSorted/nand_request_thread.h"
 #include "toBeSorted/save_manager.h"
+#include "toBeSorted/save_file.h"
 // clang-format on
 
 // This class here makes no sense and the name might
@@ -30,26 +32,20 @@ public:
 
 /* 80574FFC */ FileManager *FileManager::sInstance;
 
-extern "C" {
-/* 80009D80 */ void fn_80009D80() {} // return
-/* 80009D90 */ void fn_80009D90() {} // return
-/* 80009DA0 */ void fn_80009DA0(void *ptr) {
-    memset(ptr, 0, 0x20);
-} // memset(param_1, 0, 0x20) a 0x24 structure is implied here (0x20 data) a crc is at 0x24
+/* 80009D80 */ u16 *SkipData::getData() {
+    return data;
+}
+
+/* 80009D90 */ const u16 *SkipData::getData() const {
+    return data;
+}
+
+/* 80009DA0 */ void SkipData::clear() {
+    memset(data, 0, 0x20);
 }
 
 /* 80009DB0 */ FileManager::FileManager() {
-    // TODO the assembly code looks really wild
-    mHeroNames[0][0] = '\0';
-    u32 num_files = (u32)(mHeroName - mHeroNames[0]);
-    num_files = num_files / sizeof(mHeroName);
-    for (int i = 1; mHeroNames[i] < mHeroName && i < num_files; i++) {
-        mHeroNames[i][0] = '\0';
-    }
-    mHeroName[0] = '\0';
-    mCurrentArea[0] = '\0';
     sInstance = this;
-    // TODO these should probably use the new operators?
     mpSavedSaveFiles = (SavedSaveFiles *)mHeap::g_gameHeaps[0]->alloc(sizeof(SavedSaveFiles), 0x20);
     mpSkipData = (SkipData *)mHeap::g_gameHeaps[0]->alloc(0x80, 0x20);
 
@@ -88,7 +84,9 @@ u16 *FileManager::getStoryFlagsMut() {
 /* 8000A460 */ u16 *FileManager::getDungeonFlagsConst() {}
 /* 8000A4B0 */ u16 *FileManager::getSceneFlagsMut() {}
 /* 8000A4E0 */ u16 *FileManager::getSceneFlagsConst() {}
-/* 8000A530 */ u16 *FileManager::getTBoxFlagsMut() {}
+/* 8000A530 */ u16 *FileManager::getTBoxFlagsMut() {
+    return getCurrentFile()->getTboxFlags0();
+}
 /* 8000A560 */ u16 *FileManager::getTBoxFlagsConst() {}
 /* 8000A5B0 */ u16 *FileManager::getTempFlagsMut() {}
 /* 8000A5E0 */ u16 *FileManager::getTempFlagsConst() {}
@@ -287,7 +285,7 @@ u16 *FileManager::getStoryFlagsMut() {
     for (i = 0, data = files->skipData; i < 3; i++, data++) {
         u32 crc = calcFileCRC(data->data, sizeof(data->data));
         if (crc != data->crc) {
-            fn_80009DA0(data);
+            data->clear();
             data->crc = calcFileCRC(data->data, sizeof(data->data));
         }
     }
@@ -310,18 +308,73 @@ u16 *FileManager::getStoryFlagsMut() {
 /* 8000D270 */ void FileManager::saveOrClearSelectedFileToFileA() {
     saveOrClearToFileA(mSelectedFile);
 }
-/* 8000D280 */ void FileManager::saveOrClearToFileA(int fileNum) {}
-/* 8000D9C0 */ void FileManager::copyFileBToCurrentFile() {}
+/* 8000D280 */ void FileManager::saveOrClearToFileA(u32 fileNum) {
+
+}
+/* 8000D9C0 */ void FileManager::copyFileBToCurrentFile() {
+    SaveFile *fB = &mFileB;
+    *getCurrentFile() = *fB;
+}
 /* 8000E060 */ void FileManager::copyFileAToSelectedFile() {
     copyFileAToFile(mSelectedFile);
 }
-/* 8000E070 */ void FileManager::copyFileAToFile(int fileNum) {}
-/* 8000E7C0 */ void FileManager::copyFile(int from, int to) {}
+/* 8000E070 */ void FileManager::copyFileAToFile(u32 fileNum) {
+    if (fileNum >= 3) {
+        return;
+    }
+    SavedSaveFiles *files = mpSavedSaveFiles;
+
+    SaveFile *fileA = getFileA();
+    fileA->checksum = calcFileCRC(fileA, sizeof(SaveFile) - 4);
+    
+    SaveFile *targetFile = &files->saveFiles[fileNum];
+    *targetFile = *fileA;
+    
+    SkipData *myData = &mSkipData;
+    myData->crc = calcFileCRC(mSkipData.data, sizeof(SkipData) - 4);
+    SkipData *targetData = &files->skipData[fileNum];
+    *targetData = *myData;
+}
+/* 8000E7C0 */ void FileManager::copyFile(u32 from, u32 to) {
+    if (from < 3 && to < 3) {
+        SavedSaveFiles *files = mpSavedSaveFiles;
+    
+        SaveFile *fromFile = &files->saveFiles[from];
+        fromFile->checksum = calcFileCRC(fromFile, sizeof(SaveFile) - 4);
+        SaveFile *toFile = &files->saveFiles[to];
+        *toFile = *fromFile;
+    
+        SkipData *fromData = &files->skipData[from];
+        fromData->crc = calcFileCRC(fromData->data, sizeof(SkipData) - 4);
+        SkipData *toData = &files->skipData[to];
+        *toData = *fromData;
+        
+        SkipData *myData = &mpSkipData[from];
+        myData->crc = calcFileCRC(myData->data, sizeof(SkipData) - 4);
+        *toData = *myData;
+    }
+
+}
 /* 8000EF80 */ void FileManager::saveFileAToSelectedFile() {
     saveFileAToFile(mSelectedFile);
 }
-/* 8000EF90 */ void FileManager::saveFileAToFile(int fileNum) {}
-/* 8000F730 */ void FileManager::copyCurrentToFileB() {}
+/* 8000EF90 */ void FileManager::saveFileAToFile(u32 fileNum) {
+    if (fileNum < 3) {
+        SavedSaveFiles *files = mpSavedSaveFiles;
+
+        SaveFile *fileA = getFileA();
+        fileA->checksum = calcFileCRC(fileA, sizeof(SaveFile) - 4);
+        files->saveFiles[fileNum] = *fileA;
+        
+        SkipData *fromData = &mSkipData;
+        fromData->crc = calcFileCRC(fromData->data, sizeof(SkipData) - 4);
+        files->skipData[fileNum] = *fromData;
+        mpSkipData[fileNum] = *fromData;
+    }
+}
+/* 8000F730 */ void FileManager::copyCurrentToFileB() {
+    *getFileB() = *getCurrentFile();
+}
 /* 8000FDF0 */ void FileManager::copySelectedFileSkipData() {
     copySkipData(mSelectedFile);
 }
@@ -354,17 +407,17 @@ u16 *FileManager::getStoryFlagsMut() {
     SaveFile *file;
     SavedSaveFiles *saved = mpSavedSaveFiles;
 
-    mHeroNames[0][0] = '\0';
+    mHeroNames[0].mChars[0] = '\0';
     mPlayTime[0] = 0;
     mCurrentHealth[0] = 0;
     mCurrentHealthCapacity[0] = 0;
 
-    mHeroNames[1][0] = '\0';
+    mHeroNames[1].mChars[0] = '\0';
     mPlayTime[1] = 0;
     mCurrentHealth[1] = 0;
     mCurrentHealthCapacity[1] = 0;
 
-    mHeroNames[2][0] = '\0';
+    mHeroNames[2].mChars[0] = '\0';
     mPlayTime[2] = 0;
     mCurrentHealth[2] = 0;
     mCurrentHealthCapacity[2] = 0;
@@ -412,13 +465,22 @@ u16 *FileManager::getStoryFlagsMut() {
 
 /* 800101F0 */ void FileManager::unsetFileANewFile() {}
 /* 80010220 */ void FileManager::saveT1SaveInfo(bool entranceT1LoadFlag) {}
-/* 80010350 */ void FileManager::copyFileSkipData(int fileNum) {}
-extern "C" void fn_800C01F0(); // todo flag managers
+/* 80010350 */ void FileManager::copyFileSkipData(int fileNum) {
+    SkipData *dat = &mpSkipData[fileNum];
+    if (!isFileDirty(fileNum)) {
+        *dat = mpSavedSaveFiles->skipData[fileNum];
+    } else {
+        dat->clear();
+        dat->crc = calcFileCRC(dat->data, 0x20);
+    }
+    mIsFileSkipDataDirty[fileNum & 0xFF] = 0;
+}
+
 /* 80010440 */ void FileManager::clearTempFileData() {
     memset(&mFileA, 0, sizeof(SaveFile));
     memset(&mFileB, 0, sizeof(SaveFile));
     memset(&mSkipData, 0, sizeof(SkipData));
-    fn_800C01F0();
+    copyAllFlagManagersFromSave();
 }
 /* 800104A0 */ void FileManager::saveAfterCredits() {}
 
@@ -450,7 +512,7 @@ extern "C" void fn_800C01F0(); // todo flag managers
     }
 }
 /* 80011370 */ bool FileManager::isFileEmpty(u8 fileNum) {}
-/* 80011390 */ bool FileManager::isFileDirty(int fileNum) {}
+/* 80011390 */ bool FileManager::isFileDirty(u8 fileNum) const {}
 /* 800113B0 */ u32 FileManager::get_0xA84C() {}
 /* 800113C0 */ bool FileManager::checkRegionCode() {}
 /* 80011440 */ bool FileManager::checkFileCRC(u8 fileNum) {}

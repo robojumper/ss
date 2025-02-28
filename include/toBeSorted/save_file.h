@@ -4,6 +4,15 @@
 #include "common.h"
 #include "m/m_vec.h"
 
+struct PosData {
+    /* 0x 0010 */ mVec3_c pos_t1;
+    /* 0x 001c */ mVec3_c pos_t2;
+    /* 0x 0028 */ mVec3_c pos_t3;
+};
+
+struct BeaconData {
+    /* 0x0 */ mVec3_c beacon_pos[32][5];
+};
 
 // Ghidra: SaveFile
 //   Size: 0x53c0
@@ -12,10 +21,8 @@ struct SaveFile {
 public:
     /* 0x 0000 */ s64 playTime;
     /* 0x 0008 */ s64 savedTime;
-    /* 0x 0010 */ mVec3_c pos_t1;
-    /* 0x 001c */ mVec3_c pos_t2;
-    /* 0x 0028 */ mVec3_c pos_t3;
-    /* 0x 0034 */ mVec3_c beacon_pos[32][5];
+    /* 0x 0010 */ PosData posData;
+    /* 0x 0034 */ BeaconData beacon_pos;
     /* 0x 07b4 */ s32 beedleShopPathSegment;
     /* 0x 07b8 */ f32 beedlShopPathSegFrac;
     /* 0x 07bc */ u32 field_0x07BC;
@@ -25,23 +32,16 @@ public:
     /* 0x 08d4 */ wchar_t player_name[8];
     /* 0x 08e4 */ u16 story_flags[128];
     /* 0x 09e4 */ u16 item_flags[64];
-    /* 0x 0a64 */ u16 dungeon_flags[8][22];
-    /* 0x 0bc4 */ char field_0x0BC4[0x1a64 - 0x0bc4];
-    /* 0x 1a64 */ u16 scene_flags[208];
-    /* 0x 1c04 */ char field_0x1c04[0x2a64 - 0x1c04];
-    /* 0x 2a64 */ u16 tbox_flags[32]; // size is guessed
-    /* 0x 2aa4 */ char field_0x2AA4[0x2f64 - 0x2aa4];
+    /* 0x 0a64 */ u16 dungeon_flags[8][256];
+    /* 0x 1a64 */ u16 scene_flags[2048];
+    /* 0x 2a64 */ u16 tbox_flags[512];
+    /* 0x 2aa4 */ u16 field_0x2AA4[128];
     /* 0x 2f64 */ u16 enemyKillCounts[100];
     /* 0x 302c */ u16 hitByEnemyCounts[100];
     /* 0x 30f4 */ u16 temp_flags[4];
     /* 0x 30fc */ u16 zone_flags[252];
     /* 0x 32f4 */ u16 enemy_flags[4096];
-    /* 0x 52f4 */ u16 air_potion_timer;
-    /* 0x 52f6 */ u16 air_potion_plus_timer;
-    /* 0x 52f8 */ u16 stamina_potion_timer;
-    /* 0x 52fa */ u16 stamina_potion_plus_timer;
-    /* 0x 52fc */ u16 gaurdian_potion_timer;
-    /* 0x 52fe */ u16 gaurdian_potion_plus_timer;
+    /* 0x 52f4 */ u16 potion_timers[6];
     /* 0x 5300 */ u16 field_0x5300;
     /* 0x 5302 */ u16 health_capacity;
     /* 0x 5304 */ u16 unused_heart_related;
@@ -77,7 +77,8 @@ public:
     /* 0x 53b2 */ u8 selectedDowsingSlot;
     /* 0x 53b3 */ u8 night_t1;
     /* 0x 53b4 */ u8 night_t3;
-    /* 0x 53b5 */ char field_0x53b5[0x53bc - 0x53b5];
+    /* 0x 53b5 */ char field_0x53b5;
+    /* 0x 53b6 */ char field_0x53b6[0x53bc - 0x53b6];
     /* 0x 53bc */ u32 checksum;
 
     // ----------------------------------------------------------
