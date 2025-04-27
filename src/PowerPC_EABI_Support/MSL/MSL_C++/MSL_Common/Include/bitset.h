@@ -1,20 +1,18 @@
 #ifndef MSL_BITSET_H_
 #define MSL_BITSET_H_
 
-#include "algorithm.h"
 #include "stdio.h"
 #include "stdlib.h"
-
+#include "algorithm.h"
 
 namespace std {
 // TODO: where does this go?
-inline void __msl_error(const char *param_0) {
+inline void __msl_error(const char* param_0) {
     fprintf(stderr, param_0);
     abort();
 }
 
-template <size_t N>
-class __bitset_base {
+template<size_t N> class __bitset_base {
 public:
     __bitset_base();
 
@@ -22,25 +20,33 @@ public:
     bool any() const;
     void set(size_t pos, bool val);
     void reset(size_t pos);
-
 private:
     size_t data[N];
 };
 
-template <size_t N>
-__bitset_base<N>::__bitset_base() {
+template<> class __bitset_base<1> {
+public:
+    __bitset_base() { data = 0; }
+
+    bool test(size_t pos) const { return data & (1 << pos); }
+    bool any() const;
+    void set(size_t pos, bool val) { data |= (1 << pos); }
+    void reset(size_t pos) { data &= ~(1 << pos); }
+private:
+    size_t data;
+};
+
+template<size_t N> __bitset_base<N>::__bitset_base() {
     std::fill(data, data + N, 0);
 }
 
-template <size_t N>
-bool __bitset_base<N>::test(size_t pos) const {
+template<size_t N> bool __bitset_base<N>::test(size_t pos) const {
     size_t i = pos / (sizeof(size_t) * 8);
     size_t mask = 1 << (pos % (sizeof(size_t) * 8));
     return data[i] & mask;
 }
 
-template <size_t N>
-void __bitset_base<N>::set(size_t pos, bool val) {
+template<size_t N> void __bitset_base<N>::set(size_t pos, bool val) {
     size_t i = pos / (sizeof(size_t) * 8);
     size_t mask = 1 << (pos % (sizeof(size_t) * 8));
     if (val) {
@@ -50,19 +56,17 @@ void __bitset_base<N>::set(size_t pos, bool val) {
     }
 }
 
-template <size_t N>
-void __bitset_base<N>::reset(size_t pos) {
+template<size_t N> void __bitset_base<N>::reset(size_t pos) {
     size_t i = pos / (sizeof(size_t) * 8);
     size_t mask = 1 << (pos % (sizeof(size_t) * 8));
     data[i] &= ~mask;
 }
 
-template <size_t N>
-class bitset : private __bitset_base<(N - 1) / (sizeof(size_t) * 8) + 1> {
+template<size_t N> class bitset : private __bitset_base<(N - 1) / (sizeof(size_t) * 8) + 1> {
 public:
     typedef __bitset_base<(N - 1) / (sizeof(size_t) * 8) + 1> base;
 
-    bitset(){};
+    bitset() {};
 
     void set(size_t pos, bool val) {
         if (pos >= N) {
@@ -84,6 +88,6 @@ public:
     }
     bool any() const;
 };
-} // namespace std
+}  // namespace std
 
 #endif
