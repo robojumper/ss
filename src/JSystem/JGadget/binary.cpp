@@ -15,12 +15,11 @@ JGadget::binary::parseVariableUInt_16_32_following(void const* buffer, u32* para
         param_3 = &temp;
     }
     u32 uVar1 = *(u16*)buffer;
-    const void* rv;
     if ((uVar1 & 0x8000) == 0) {
         param_3->value = 0x10;
         *param_1 = uVar1;
         *param_2 =  *(u16*)((u8*)buffer + 2);
-        rv = (u8*)buffer + 4;
+        return (u8*)buffer + 4;
     } else {
         param_3->value = 0x20;
         uVar1 <<= 16;
@@ -28,9 +27,8 @@ JGadget::binary::parseVariableUInt_16_32_following(void const* buffer, u32* para
         uVar1 |= *(u16*)((u8*)buffer + 2);
         *param_1 = uVar1;
         *param_2 = *(u32*)((u8*)buffer + 4);
-        rv = (u8*)buffer + 8;
+        return (u8*)buffer + 8;
     }
-    return rv;
 }
 
 /* 802DC8C8-802DC910 2D7208 0048+00 0/0 4/4 0/0 .text

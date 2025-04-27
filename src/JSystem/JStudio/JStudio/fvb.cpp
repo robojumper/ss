@@ -4,7 +4,7 @@
 //
 
 #include "JSystem/JStudio/JStudio/fvb.h"
-#include "JSystem/JUtility/JUTException.h"
+// #include "JSystem/JUtility/JUTException.h"
 #include <string.h>
 
 namespace JStudio {
@@ -39,8 +39,8 @@ void TObject::prepare(data::TParse_TBlock const& rBlock, TControl* pControl) {
             TFunctionValueAttribute_refer* pfvaRefer = set.refer_get();
             JUT_EXPECT(pfvaRefer != NULL);
             if (pfvaRefer == NULL) {
-                JUTWarn w;
-                w << "invalid paragraph";
+                // JUTWarn w;
+                // w << "invalid paragraph";
             } else {
                 JGadget::TVector_pointer<TFunctionValue*>& rCnt = pfvaRefer->refer_referContainer();
                 u32* content = (u32*)pContent;
@@ -50,8 +50,8 @@ void TObject::prepare(data::TParse_TBlock const& rBlock, TControl* pControl) {
                     u32 size = *ptr;
                     TObject* pObject = pControl->getObject(ptr + 1, size);
                     if (pObject == NULL) {
-                        JUTWarn w;
-                        w << "object not found by ID";
+                        // JUTWarn w;
+                        // w << "object not found by ID";
                     } else {
                         TFunctionValue* rfv = pObject->referFunctionValue();
                         rCnt.push_back(rfv);
@@ -66,8 +66,8 @@ void TObject::prepare(data::TParse_TBlock const& rBlock, TControl* pControl) {
             TFunctionValueAttribute_refer* pfvaRefer = set.refer_get();
             JUT_EXPECT(pfvaRefer != NULL);
             if (pfvaRefer == NULL) {
-                JUTWarn w;
-                w << "invalid paragraph";
+                // JUTWarn w;
+                // w << "invalid paragraph";
             } else {
                 JGadget::TVector_pointer<TFunctionValue*>& rCnt = pfvaRefer->refer_referContainer();
                 u32* content = (u32*)pContent;
@@ -77,8 +77,8 @@ void TObject::prepare(data::TParse_TBlock const& rBlock, TControl* pControl) {
                     u32 index = *ptr;
                     TObject* pObject = pControl->getObject_index(index);
                     if (pObject == NULL) {
-                        JUTWarn w;
-                        w << "object not found by index : " << index;
+                        // JUTWarn w;
+                        // w << "object not found by index : " << index;
                     } else {
                         TFunctionValue& rfv = *pObject->referFunctionValue();
                         rCnt.push_back(&rfv);
@@ -92,8 +92,8 @@ void TObject::prepare(data::TParse_TBlock const& rBlock, TControl* pControl) {
             TFunctionValueAttribute_range* pfvaRange = set.range_get();
             JUT_EXPECT(pfvaRange != NULL);
             if (pfvaRange == NULL) {
-                JUTWarn w;
-                w << "invalid paragraph";
+                // JUTWarn w;
+                // w << "invalid paragraph";
             } else {
                 f32* arr = (f32*)pContent;
                 pfvaRange->range_set(arr[0], arr[1]);
@@ -105,8 +105,8 @@ void TObject::prepare(data::TParse_TBlock const& rBlock, TControl* pControl) {
             TFunctionValueAttribute_range* pfvaRange = set.range_get();
             JUT_EXPECT(pfvaRange != NULL);
             if (pfvaRange == NULL) {
-                JUTWarn w;
-                w << "invalid paragraph";
+                // JUTWarn w;
+                // w << "invalid paragraph";
             } else {
                 TFunctionValue::TEProgress prog = *(TFunctionValue::TEProgress*)pContent;
                 pfvaRange->range_setProgress(prog);
@@ -118,8 +118,8 @@ void TObject::prepare(data::TParse_TBlock const& rBlock, TControl* pControl) {
             TFunctionValueAttribute_range* pfvaRange = set.range_get();
             JUT_EXPECT(pfvaRange != NULL);
             if (pfvaRange == NULL) {
-                JUTWarn w;
-                w << "invalid paragraph";
+                // JUTWarn w;
+                // w << "invalid paragraph";
             } else {
                 TFunctionValue::TEAdjust adjust = *(TFunctionValue::TEAdjust*)pContent;
                 pfvaRange->range_setAdjust(adjust);
@@ -131,8 +131,8 @@ void TObject::prepare(data::TParse_TBlock const& rBlock, TControl* pControl) {
             TFunctionValueAttribute_range* pfvaRange = set.range_get();
             JUT_EXPECT(pfvaRange != NULL);
             if (pfvaRange == NULL) {
-                JUTWarn w;
-                w << "invalid paragraph";
+                // JUTWarn w;
+                // w << "invalid paragraph";
             } else {
                 u16* out = (u16*)pContent;
                 pfvaRange->range_setOutside((TFunctionValue::TEOutside)out[0],
@@ -145,16 +145,16 @@ void TObject::prepare(data::TParse_TBlock const& rBlock, TControl* pControl) {
             TFunctionValueAttribute_interpolate* pfvaInterpolate = set.interpolate_get();
             JUT_EXPECT(pfvaInterpolate != NULL);
             if (pfvaInterpolate == NULL) {
-                JUTWarn w;
-                w << "invalid paragraph";
+                // JUTWarn w;
+                // w << "invalid paragraph";
             } else {
                 TFunctionValue::TEInterpolate interp = *(TFunctionValue::TEInterpolate*)pContent;
                 pfvaInterpolate->interpolate_set(interp);
             }
         } break;
         default:
-            JUTWarn w;
-            w << "unknown paragraph : " << u32Type;
+            // JUTWarn w;
+            // w << "unknown paragraph : " << u32Type;
         }
         pData = dat.next;
         ASSERT(pData != 0);
@@ -395,8 +395,8 @@ TObject* TFactory::create(data::TParse_TBlock const& rBlock) {
     case 6:
         return new TObject_hermite(rBlock);
     default:
-        JUTWarn w;
-        w << "unknown type : ";
+        // JUTWarn w;
+        // w << "unknown type : ";
         return NULL;
     }
 }
@@ -423,24 +423,24 @@ bool TParse::parseHeader_next(void const** ppData_inout, u32* puBlock_out, u32 f
     *puBlock_out = header.get_blockNumber();
 
     if (memcmp(header.get_signature(), &data::ga4cSignature, 4) != 0) {
-        JUTWarn w;
-        w << "unknown signature";
+        // JUTWarn w;
+        // w << "unknown signature";
         return false;
     }
 
     if (header.get_byteOrder() != 0xFEFF) {
-        JUTWarn w;
-        w << "illegal byte-order";
+        // JUTWarn w;
+        // w << "illegal byte-order";
         return false;
     }
     u16 version = header.get_version();
     if (version < 2) {
-        JUTWarn w;
-        w << "obselete version : " << (long)0;
+        // JUTWarn w;
+        // w << "obselete version : " << (long)0;
         return false;
     } else if (version > 0x100) {
-        JUTWarn w;
-        w << "unknown version : " << version;
+        // JUTWarn w;
+        // w << "unknown version : " << version;
         return false;
     }
     return true;
@@ -469,15 +469,15 @@ bool TParse::parseBlock_next(void const** ppData_inout, u32* puData_out, u32 fla
 
     TFactory* pFactory = pControl->getFactory();
     if (pFactory == NULL) {
-        JUTWarn w;
-        w << "factory not specified";
+        // JUTWarn w;
+        // w << "factory not specified";
         return 0;
     }
 
     TObject* pObject = pFactory->create(blk);
     if (pObject == NULL) {
-        JUTWarn w;
-        w << "can't create function-value";
+        // JUTWarn w;
+        // w << "can't create function-value";
         if (flags & 0x40) {
             return 1;
         }

@@ -3,7 +3,7 @@
 
 #include <math.h>
 #include "JSystem/JGadget/std-vector.h"
-#include "JSystem/JGadget/define.h"
+// #include "JSystem/JGadget/define.h"
 #include "JSystem/JGadget/search.h"
 
 namespace JStudio {

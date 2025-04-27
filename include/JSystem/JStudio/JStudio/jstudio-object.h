@@ -2,7 +2,7 @@
 #define JSTUDIO_OBJECT_H
 
 #include "JSystem/JStudio/JStudio/jstudio-control.h"
-#include "global.h"
+#include "common.h"
 #include "limits.h"
 #include "math.h"
 
@@ -66,10 +66,12 @@ struct TVariableValue {
     template<typename T>
     T getValue_clamp() const {
         f32 val = mValue;
-        if (val <= std::numeric_limits<T>::min()) {
-            return std::numeric_limits<T>::min();
-        } else if (val >= std::numeric_limits<T>::max()) {
-            return std::numeric_limits<T>::max();
+        T min = std::numeric_limits<T>::min();
+        T max = std::numeric_limits<T>::max();
+        if (val <= min) {
+            return min;
+        } else if (val >= max) {
+            return max;
         }
         return val;
     }

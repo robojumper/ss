@@ -15,6 +15,10 @@ public:
         return 3.402823466e+38f;
     }
 
+    static T nan() {
+        return 0.0f / 0.0f;
+    }
+
     static T pi() {
         return 3.14159265f;
     }

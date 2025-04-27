@@ -1,6 +1,5 @@
 #include "JSystem/JStudio/JStudio/stb.h"
 #include "JSystem/JStudio/JStudio/jstudio-object.h"
-#include "JSystem/JUtility/JUTException.h"
 #include <algorithm.h>
 #include <string.h>
 
@@ -50,8 +49,8 @@ TObject::~TObject() {
 void TObject::setFlag_operation(u8 op, int val) {
     switch (op) {
     default:
-        JUTWarn w;
-        w << "unknown flag-operation : " << op;
+        // JUTWarn w;
+        // w << "unknown flag-operation : " << op;
         break;
     case 1:
         mFlag |= val;
@@ -237,8 +236,8 @@ void TObject::process_sequence_() {
         JUT_EXPECT(p == pNext);
         break;
     default:
-        JUTWarn w;
-        w << "unknown sequence : " << dat.type;
+        // JUTWarn w;
+        // w << "unknown sequence : " << dat.type;
         break;
     }
 }
@@ -385,24 +384,24 @@ bool TParse::parseHeader_next(const void** ppData_inout, u32* puBlock_out, u32 f
     *puBlock_out = header.get_blockNumber();
 
     if (memcmp(header.get_signature(), &data::ga4cSignature, 4) != 0) {
-        JUTWarn w;
-        w << "unknown signature";
+        // JUTWarn w;
+        // w << "unknown signature";
         return false;
     }
 
     if (header.get_byteOrder() != 0xFEFF) {
-        JUTWarn w;
-        w << "illegal byte-order";
+        // JUTWarn w;
+        // w << "illegal byte-order";
         return false;
     }
     u16 version = header.get_version();
     if (version < 1) {
-        JUTWarn w;
-        w << "obselete version : " << (long)0;
+        // JUTWarn w;
+        // w << "obselete version : " << (long)0;
         return false;
     } else if (version > 3) {
-        JUTWarn w;
-        w << "unknown version : " << version;
+        // JUTWarn w;
+        // w << "unknown version : " << version;
         return false;
     }
     return parseHeader(header, flags);
@@ -452,8 +451,8 @@ bool TParse::parseBlock_object(const data::TParse_TBlock_object& ppObject, u32 f
 
     TFactory* pFactory = pControl->getFactory();
     if (pFactory == NULL) {
-        JUTWarn w;
-        w << "factory not specified";
+        // JUTWarn w;
+        // w << "factory not specified";
         return false;
     }
 
@@ -467,9 +466,9 @@ bool TParse::parseBlock_object(const data::TParse_TBlock_object& ppObject, u32 f
         int type = ppObject.get_type();
         data::toString_block(a5c, type);
 
-        JUTWarn w;
-        w << "can't create object : " << a5c;
-        w << "(0x" << type << ")";
+        // JUTWarn w;
+        // w << "can't create object : " << a5c;
+        // w << "(0x" << type << ")";
         return false;
     }
     pControl->appendObject(p);

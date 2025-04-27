@@ -13,6 +13,7 @@
 #define ROUND_DOWN_PTR(x, align) ((void *)(((u32)(x)) & (~((align) - 1))))
 
 #define ARRAY_LENGTH(x) (sizeof((x)) / sizeof((x)[0]))
+#define ARRAY_SIZE(x) (sizeof((x)) / sizeof((x)[0]))
 
 #define CLEAR_PATH(x) __memclr((x), sizeof((x)))
 

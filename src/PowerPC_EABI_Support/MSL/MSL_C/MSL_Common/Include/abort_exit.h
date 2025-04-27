@@ -5,7 +5,7 @@
 extern "C" {
 #endif
 
-void exit(int status);
+// void exit(int status);
 void abort(void);
 
 extern void (*__stdio_exit)(void);

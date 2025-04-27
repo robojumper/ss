@@ -4,7 +4,7 @@
 //
 
 #include "JSystem/JStudio/JStudio/stb-data-parse.h"
-#include "dolphin/os.h"
+#include "rvl/OS.h"
 
 namespace JStudio {
 namespace stb {

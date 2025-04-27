@@ -58,10 +58,7 @@ int JStudio::TControl::transform_setOrigin_ctb(JStudio::ctb::TObject const& para
     switch (param_0.getScheme()) {
     case 1:
         const f32* pfVar4 = (const f32*)param_0.getData();
-        Vec local_144 = {0.0f, 0.0f, 0.0f};
-        local_144.x = pfVar4[0];
-        local_144.y = pfVar4[1];
-        local_144.z = pfVar4[2];
+        Vec local_144 = {pfVar4[0], pfVar4[1], pfVar4[2]};
         transform_setOrigin_TxyzRy(local_144, pfVar4[3]);
         break;
     default:
@@ -120,10 +117,10 @@ JStudio::TParse::~TParse() {}
  * parseHeader__Q27JStudio6TParseFRCQ47JStudio3stb4data14TParse_THeaderUl */
 bool JStudio::TParse::parseHeader(JStudio::stb::data::TParse_THeader const& param_0,
                                       u32 param_1) {
-    const JStudio::stb::data::THeader::Target& target = param_0.get_target();
-    if (memcmp(target.name, JStudio::data::ga8cSignature, sizeof(JStudio::data::ga8cSignature)) != 0) {
+    if (memcmp(param_0.get_target().name, JStudio::data::ga8cSignature, sizeof(JStudio::data::ga8cSignature)) != 0) {
         return false;
     }
+    const JStudio::stb::data::THeader::Target& target = param_0.get_target();
     if (target.target_version < 2) {
         return false;
     } 

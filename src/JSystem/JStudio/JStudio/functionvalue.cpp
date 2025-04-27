@@ -5,9 +5,10 @@
 
 #include "JSystem/JStudio/JStudio/functionvalue.h"
 #include "JSystem/JGadget/search.h"
-#include "JSystem/JUtility/JUTException.h"
+// #include "JSystem/JUtility/JUTException.h"
 #include "JSystem/JUtility/JUTAssert.h"
 #include "JSystem/JGadget/linklist.h"
+#include "egg/math/eggMath.h"
 #include "math.h"
 #include "stdlib.h"
 
@@ -32,8 +33,8 @@ ExtrapolateParameter TFunctionValue::toFunction_outside(int idx) {
                                                              fallback);
 
     if (result == NULL) {
-        JUTWarn w;
-        w << "unknown outside : " << idx;
+        // JUTWarn w;
+        // w << "unknown outside : " << idx;
 
         return gapfnExtrapolateParameter_[0];
     }
@@ -155,7 +156,7 @@ f64 extrapolateParameter_turn(f64 param_0, f64 param_1) {
 }  // namespace functionvalue
 
 void TFunctionValueAttribute_range::range_initialize() {
-    fBegin_ = NAN;
+    fBegin_ = EGG::Math<f32>::nan();
     fEnd_ = fBegin_;
     fDifference_ = fBegin_;
 
@@ -169,8 +170,8 @@ void TFunctionValueAttribute_range::range_prepare() {
 
     switch (progress) {
     default:
-        JUTWarn w;
-        w << "unknown progress : " << progress;
+        // JUTWarn w;
+        // w << "unknown progress : " << progress;
     case 0:
         _20 = 0.0;
         _28 = 1.0;
@@ -212,8 +213,8 @@ f64 TFunctionValueAttribute_range::range_getParameter(f64 arg1, f64 arg2, f64 ar
 
     switch (adjust) {
     default:
-        JUTWarn w;
-        w << "unknown adjust : " << adjust;
+        // JUTWarn w;
+        // w << "unknown adjust : " << adjust;
     case 0:
         result = range_getParameter_outside(progress);
         break;
@@ -236,7 +237,7 @@ f64 TFunctionValueAttribute_range::range_getParameter(f64 arg1, f64 arg2, f64 ar
 
 
 TFunctionValueAttribute_range::TFunctionValueAttribute_range()
-    : fBegin_(NAN), fEnd_(fBegin_), fDifference_(fBegin_),
+    : fBegin_(EGG::Math<f32>::nan()), fEnd_(fBegin_), fDifference_(fBegin_),
       mProgress(TFunctionValue::PROG_INIT), mAdjust(TFunctionValue::ADJ_INIT), _20(fBegin_),
       _28(fBegin_), mBegin(TFunctionValue::OUT_INIT), mEnd(TFunctionValue::OUT_INIT) {}
 
@@ -446,7 +447,7 @@ f64 TFunctionValue_composite::composite_divide(TVector_pointer<TFunctionValue*> 
 }
 
 
-TFunctionValue_constant::TFunctionValue_constant() : fValue_(NAN) {}
+TFunctionValue_constant::TFunctionValue_constant() : fValue_(EGG::Math<f32>::nan()) {}
 
 u32 TFunctionValue_constant::getType() const {
     return 2;
@@ -457,7 +458,7 @@ TFunctionValueAttributeSet TFunctionValue_constant::getAttributeSet() {
 }
 
 void TFunctionValue_constant::initialize() {
-    fValue_ = NAN;
+    fValue_ = EGG::Math<f32>::nan();
 }
 
 void TFunctionValue_constant::prepare() {
@@ -468,7 +469,7 @@ f64 TFunctionValue_constant::getValue(f64 arg1) {
     return fValue_;
 }
 
-TFunctionValue_transition::TFunctionValue_transition() : _48(NAN), _50(_48) {}
+TFunctionValue_transition::TFunctionValue_transition() : _48(EGG::Math<f32>::nan()), _50(_48) {}
 
 u32 TFunctionValue_transition::getType() const {
     return 3;
@@ -482,7 +483,7 @@ void TFunctionValue_transition::initialize() {
     range_initialize();
     interpolate_initialize();
 
-    _48 = NAN;
+    _48 = EGG::Math<f32>::nan();
     _50 = _48;
 }
 
@@ -534,7 +535,7 @@ f64 TFunctionValue_transition::getValue(f64 param_1) {
     }
 }
 
-TFunctionValue_list::TFunctionValue_list() : _44(NULL), uData_(0), _50(NAN), pfnUpdate_(NULL) {}
+TFunctionValue_list::TFunctionValue_list() : _44(NULL), uData_(0), _50(EGG::Math<f32>::nan()), pfnUpdate_(NULL) {}
 
 u32 TFunctionValue_list::getType() const {
     return 4;
@@ -550,7 +551,7 @@ void TFunctionValue_list::initialize() {
 
     _44 = NULL;
     uData_ = 0;
-    _50 = NAN;
+    _50 = EGG::Math<f32>::nan();
     pfnUpdate_ = NULL;
 }
 
@@ -562,8 +563,8 @@ void TFunctionValue_list::prepare() {
 
     switch (interp) {
     default:
-        JUTWarn w;
-        w << "unknown interpolation : " << interp;
+        // JUTWarn w;
+        // w << "unknown interpolation : " << interp;
     case 0:
         pfnUpdate_ = update_INTERPOLATE_NONE_;
         break;
@@ -725,8 +726,8 @@ void TFunctionValue_list_parameter::prepare() {
     u32 interp = interpolate_get();
     switch (interp) {
     default:
-        JUTWarn w;
-        w << "unknown interpolation : " << interp;
+        // JUTWarn w;
+        // w << "unknown interpolation : " << interp;
     case 0:
         pfnUpdate_ = update_INTERPOLATE_NONE_;
         break;
