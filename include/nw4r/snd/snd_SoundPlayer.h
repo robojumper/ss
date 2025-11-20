@@ -99,6 +99,10 @@ namespace nw4r { namespace snd
 			return pFunc;
 		}
 
+		detail::BasicSound::SoundPlayerPlayLinkList& GetSoundList() {
+			return mSoundList;
+		}
+
 	// members
 	private:
 		detail::BasicSound::SoundPlayerPlayLinkList		mSoundList;				// size 0x0c, offset 0x00

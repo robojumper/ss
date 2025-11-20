@@ -1981,6 +1981,16 @@ config.libs = [
             ),
         ],
     },
+    {
+        "lib": "mods",
+        # no idea
+        "mw_version": "Wii/1.5",
+        "cflags": cflags_framework,
+        "host": False,
+        "objects": [
+            Object(Equivalent, "mod/main.cpp"),
+        ],
+    },
     # Begin RELs
     {
         "lib": "REL",
@@ -2982,12 +2992,12 @@ def link_order_callback(module_id: int, objects: List[str]) -> List[str]:
     if not config.non_matching:
         return objects
     if module_id == 0:  # DOL
-        return objects + ["dummy.c"]
+        return objects + ["mod/main.cpp"]
     return objects
 
 
 # Uncomment to enable the link order callback.
-# config.link_order_callback = link_order_callback
+config.link_order_callback = link_order_callback
 
 # Optional extra categories for progress tracking
 config.progress_categories = [

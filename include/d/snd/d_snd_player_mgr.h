@@ -212,6 +212,13 @@ public:
         /** not sure */
         PLAYER_UNK_21 = 21,
     };
+    nw4r::snd::SoundArchivePlayer& GetPlayer() {
+        return mDemoSoundArchivePlayer;
+    }
+
+    nw4r::snd::MemorySoundArchive& GetArchive() {
+        return mDemoSoundArchive;
+    }
 
 private:
     /* 0x010 */ u8 field_0x010;
