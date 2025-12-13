@@ -1,0 +1,159 @@
+base: SOUE01
+
+module: MAIN
+    # .init
+    offset .init:0x80004000 +0x0
+
+    # extab
+    offset extab:0x80006720 +0x0
+
+    # extabindex
+    offset extabindex:0x80006920 +0x0
+
+    # .text
+    offset .text:0x80006C20 +0x0
+    insert .text:0x80009D20 setAreaT3__8SaveFileFPc = .text:0x80009D20; // type:function size:0x11C
+    offset .text:0x80009D20 +0x120
+    resize .text:0x800104A0 0xD98
+    offset .text:0x80011210 +0x150
+    resize .text:0x800A4560 0x8AC
+    resize .text:0x800FD860 0xA08
+    offset .text:0x800FE110 +0x2B0
+    resize .text:0x80284050 0x4F0
+    offset .text:0x802844A0 +0x350
+    resize .text:0x8029FE90 0x220
+    resize .text:0x80345EA0 0xA4
+    offset .text:0x80345ED0 +0x3D0
+    resize .text:0x80345ED0 0xA8
+    offset .text:0x80345F10 +0x440
+    insert .text:0x80367620 fn_SOUE01_R1_80367A60 = .text:0x80367A60; // type:function size:0x3C
+    offset .text:0x80367620 +0x480
+    resize .text:0x80384E30 0xD8
+    offset .text:0x80384EF0 +0x4A0
+    resize .text:0x803996B0 0x210
+    offset .text:0x803998A0 +0x4C0
+
+    # .ctors
+    offset .ctors:0x804DB640 +0x4C0
+
+    # .dtors
+    offset .dtors:0x804DB9E0 +0x4C0
+
+    # .rodata
+    offset .rodata:0x804DBA00 +0x4C0
+    insert .rodata:0x804F24E8 s_SirenExitClear = .rodata:0x804F29A8; // type:object size:0xF data:string
+    offset .rodata:0x804F24E8 +0x4D0
+    resize .rodata:0x804F26B8 0x78C
+    offset .rodata:0x804F2E28 +0x4EC
+    offset .rodata:0x804F2E50 +0x4F0
+    offset .rodata:0x804FBA60 +0x4E0
+
+    # .data
+    offset .data:0x804FD060 +0x4E0
+    insert .data:0x8054D76C s_Sword_01_5 = .data:0x8054DC4C; // type:object size:0xB data:string
+    offset .data:0x8054D76C +0x4EC
+    offset .data:0x8054D7A8 +0x4F0
+    offset .data:0x8054DA20 +0x4E0
+
+    # .sdata
+    offset .sdata:0x80571440 +0x4e0
+
+    # .sbss
+    offset .sbss:0x80574FA0 +0x4e0
+
+    # .sdata2
+    offset .sdata2:0x805769C0 +0x4e0
+
+    # .sbss2
+    offset .sbss2:0x8057FFA0 +0x4e0
+
+    # .bss
+    offset .bss:0x80580000 +0x500
+
+module: d_a_b_vdNP
+    resize .text:0x000017A0 0x1204
+    offset .text:0x000029A0 +0x10
+    # TODO - resizes
+
+module: d_a_b_bigbossNP
+    resize .text:0x00014CD0 0x1ED8
+    offset .text:0x00016BA0 +0x10
+
+module: d_a_b_bigboss2NP
+    resize .text:0x000270F0 0x216C
+
+module: d_a_b_bigboss3NP
+    resize .text:0x00021A80 0x1C14
+    offset .text:0x00023690 +0x10
+
+module: d_a_bird_zelda_trainingNP
+    resize .text:0x00001020 0xD8
+    offset .text:0x00001110 -0x10
+    resize .text:0x000017D0 0x25C
+    offset .text:0x00001A50 -0x30
+
+module: d_a_b_mgNP
+    resize .text:0x000074B0 0x1028
+    offset .text:0x000084D0 +0x10
+
+module: d_a_b_krNP
+    # TODO: resizes
+    resize .text:0x00005D80 0x834
+    offset .text:0x000065A0 0x20
+    insert .text:0x000066A0 unk_new_SOUE01_R1_func = .text:0x000066C0; // type:function size:0x50
+    offset .text:0x000066A0 0x70
+    resize .text:0x00006720 0x1D24
+    offset .text:0x00008440 0x80
+
+module: d_a_b_kr_armNP
+    resize .text:0x00005B90 0x8B8
+    offset .text:0x00006430 +0x20
+
+module: d_a_b_lastbossNP
+    resize .text:0x00009610 0xAF8
+
+module: d_a_b_girahimu_baseNP
+    resize .text:0x00008630 0x84
+    offset .text:0x000086B0 +0x10
+
+module: d_a_b_girahimuNP
+    resize .text:0x000033D0 0x808
+
+module: d_a_b_girahimu2NP
+    resize .text:0x00006950 0x768
+
+module: d_a_b_girahimu3_firstNP
+    resize .text:0x00000F80 0x170
+    resize .text:0x000010F0 0x84
+    offset .text:0x00001170 +0x10
+    resize .text:0x00001510 0x8C8
+
+module: d_a_b_nusiNP
+    resize .text:0x00001A00 0x1584
+    offset .text:0x00002F80 +0x10
+
+module: d_a_b_nusi_tentakleNP
+    resize .text:0x00002560 0xC8C
+
+module: d_a_b_asuraNP
+    resize .text:0x0000D250 0x10B4
+    offset .text:0x0000E300 +0x10
+    resize .text:0x0000E300 0xAC
+
+module: d_a_e_gumarmNP
+    resize .text:0x00004430 0x154
+    offset .text:0x00004560 0x30
+    insert .rodata:0x00000128 random_float_160 = .rodata:0x00000128; // type:object size:0x4 data:float
+    offset .rodata:0x00000128 +0x4
+
+module: d_a_obj_blast_rockNP
+    resize .text:0x00000590 0x640
+    offset .text:0x00000BC0 +0x10
+
+module: d_a_obj_fruit_guts_leafNP
+    resize .text:0x000000D0 0xBC
+    offset .text:0x00000180 +0x10
+
+module: d_a_obj_kibakoNP
+    resize .text:0x00000530 0x108
+    offset .text:0x00000620 +0x20

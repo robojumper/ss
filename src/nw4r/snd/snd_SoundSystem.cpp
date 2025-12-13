@@ -39,8 +39,13 @@
 
 // You probably want to change these
 #define BUILDSTAMP_BUILD_TYPE		"final  "
-#define BUILDSTAMP_DATE				"Sep 25 2011"
-#define BUILDSTAMP_TIME				"05:32:58"
+#if BUILD_REVISION >= REV_NTSC_R1
+ #define BUILDSTAMP_DATE				"Oct  7 2011"
+ #define BUILDSTAMP_TIME				"22:22:22"
+#else
+ #define BUILDSTAMP_DATE				"Sep 25 2011"
+ #define BUILDSTAMP_TIME				"05:32:58"
+#endif
 #define BUILDSTAMP_CW_MAJOR_REV		STR(__CWCC__)
 #define BUILDSTAMP_CW_MINOR_REV		STR(__CWBUILD__)
 

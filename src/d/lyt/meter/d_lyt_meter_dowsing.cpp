@@ -944,12 +944,49 @@ bool dLytMeterDowsing_c::execute() {
                 mAnm[DOWSING_ANIM_INPUT_0].setAnimEnable(false);
             }
             field_0x550B = 0;
+
+#if BUILD_REVISION >= REV_NTSC_R1
+            if (mAnm[DOWSING_ANIM_IN].isEnabled()) {
+                mAnm[DOWSING_ANIM_IN].setToEnd2();
+            }
+            mAnm[DOWSING_ANIM_RESET].setForwardOnce();
+            mAnm[DOWSING_ANIM_RESET].setToEnd2();
+            mAnm[DOWSING_ANIM_RESET].setAnimEnable(true);
+            mLyt.getLayout()->Animate(0);
+            mLyt.calc();
+
+            if (mAnm[DOWSING_ANIM_IN].isEnabled()) {
+                mAnm[DOWSING_ANIM_IN].setAnimEnable(false);
+            }
+            mAnm[DOWSING_ANIM_RESET].setAnimEnable(false);
+            field_0x550A = 0;
+            mStateMgr.changeState(StateID_Wait);
+#else
             mStateMgr.changeState(StateID_Reset);
+#endif
         }
 
         if (*mStateMgr.getStateID() == StateID_MenuSelectingIn || *mStateMgr.getStateID() == StateID_MenuSelecting ||
             *mStateMgr.getStateID() == StateID_MenuSelectingOut) {
+#if BUILD_REVISION >= REV_NTSC_R1
+            if (mAnm[DOWSING_ANIM_IN].isEnabled()) {
+                mAnm[DOWSING_ANIM_IN].setToEnd2();
+            }
+            mAnm[DOWSING_ANIM_RESET].setForwardOnce();
+            mAnm[DOWSING_ANIM_RESET].setToEnd2();
+            mAnm[DOWSING_ANIM_RESET].setAnimEnable(true);
+            mLyt.getLayout()->Animate(0);
+            mLyt.calc();
+
+            if (mAnm[DOWSING_ANIM_IN].isEnabled()) {
+                mAnm[DOWSING_ANIM_IN].setAnimEnable(false);
+            }
+            mAnm[DOWSING_ANIM_RESET].setAnimEnable(false);
+            field_0x550A = 0;
+            mStateMgr.changeState(StateID_Wait);
+#else
             mStateMgr.changeState(StateID_Reset);
+#endif
         }
 
         if (*mStateMgr.getStateID() == StateID_Wait) {

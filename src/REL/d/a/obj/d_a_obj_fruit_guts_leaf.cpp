@@ -2,6 +2,7 @@
 
 #include "common.h"
 #include "d/a/obj/d_a_obj_base.h"
+#include "d/d_sc_game.h"
 #include "f/f_base.h"
 #include "m/m_vec.h"
 #include "nw4r/g3d/res/g3d_resfile.h"
@@ -33,7 +34,14 @@ bool dAcOFruitGutsLeaf_c::createHeap() {
         return false;
     }
 
-    TRY_CREATE(mMdl.create(m, &mAllocator, 0x120));
+    u32 bufferOption = 0x120;
+#if BUILD_REVISION >= REV_NTSC_R1
+    if (dScGame_c::currentSpawnInfo.getTrial() == SpawnInfo::TRIAL) {
+        bufferOption = 0x920;
+    }
+#endif
+
+    TRY_CREATE(mMdl.create(m, &mAllocator, bufferOption));
 
     return true;
 }

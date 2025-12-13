@@ -1807,7 +1807,7 @@ const char *dMessage_c::getLanguageIdentifier() {
     u8 lang = getCurrentLanguage1();
     if (lang == D_LANG_FR) {
         sCurrentLanguage = "fr_US";
-    } else if (lang == D_LANG_ES) {
+    } else if (lang == D_LANG_SP) {
         sCurrentLanguage = "es_US";
     } else {
         sCurrentLanguage = "en_US";

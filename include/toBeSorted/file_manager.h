@@ -65,6 +65,10 @@ public:
 
     FileManager();
 
+#if BUILD_REVISION >= REV_NTSC_R2
+    void fixSothBug();
+#endif
+
     static FileManager *create(EGG::Heap *);
     bool loadSaveData(NandRequestWriteHolder *out, const char *name, bool isSkipData);
     void saveSaveData(NandRequestLoadSaveFileHolder *request, bool isSkipData);

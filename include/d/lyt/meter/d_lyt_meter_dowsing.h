@@ -204,7 +204,7 @@ private:
     /* 0x02D0 */ dLytMeterDowsingText_c mText[2];
     /* 0x0358 */ UI_STATE_MGR_DECLARE(dLytMeterDowsing_c);
 
-    /* 0x0490 */ d2d::dLytSub mLyt;
+    /* 0x0394 */ d2d::dLytSub mLyt;
 
     /* 0x0428 */ d2d::AnmGroup_c mAnm[29];
     /* 0x0B68 */ nw4r::lyt::Pane *mpPanes[22];

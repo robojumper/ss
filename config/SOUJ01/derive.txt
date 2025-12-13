@@ -1,0 +1,309 @@
+base: SOUE01_R1
+
+module: MAIN
+    split_addition revolution/kpr/kpr_lib.c .sdata2 start:0x80581828 end:0x80581830
+
+    # .init
+    offset .init:0x80004000 +0x0
+
+    # extab
+    offset extab:0x80006720 +0x0
+
+    # extabindex
+    offset extabindex:0x80006920 +0x0
+
+    # .text
+    offset .text:0x80006C20 +0x0
+
+    resize .text:0x800524A0 0x318
+    offset .text:0x80052800 -0x40
+
+    resize .text:0x800550A0 0x8
+    split_offset .text:0x800550D7 -0x70
+    offset .text:0x800550E0 -0x70
+
+    resize .text:0x800B0410 0x250
+    offset .text:0x800b0600 -0x10
+
+    # dropped fn_800B1F10__10dLyt_HIO_cFv
+    delete .text:0x800B2060
+    offset .text:0x800B20A0 -0x50
+    
+    # dropped toUpperCase__FwPwUl
+    delete .text:0x800B3640
+    offset .text:0x800B3710 -0x120
+    
+    resize .text:0x800B3A60 0x9A8
+    offset .text:0x800B43E0 -0xF0
+
+    resize .text:0x800B43E0 0x578
+    offset .text:0x800B4990 -0x120
+
+    resize .text:0x800B49B0 0x7BC
+
+    # todo insert function at 0x800B5140
+    offset .text:0x800B5140 +0x60
+
+    resize .text:0x800B5140 0x254
+    offset .text:0x800b53C0 +0x40
+    # todo insert function at 0x800B5640
+    offset .text:0x800B5640 +0x4D0
+
+    resize .text:0x800B5F20 0x214
+    offset .text:0x800B6120 +0x4F0
+    resize .text:0x800B6120 0x20
+    offset .text:0x800B6230 +0x400
+
+    resize .text:0x800B8190 0x1E4
+    resize .text:0x800B89A0 0x3C
+
+    # dropped shouldUseSingular
+    delete .text:0x80168210
+    split_offset .text:0x80168283 +0x384
+    offset .text:0x80168290 +0x380
+
+    resize .text:0x801B3060 0xB0
+    offset .text:0x801B3210 +0x280
+
+    resize .text:0x80282D80 0x17C
+    offset .text:0x80283050 +0x130
+
+    resize .text:0x8028F110 0x38
+    offset .text:0x8028F180 +0x100
+
+    resize .text:0x80293760 0xC
+    offset .text:0x802937A0 +0xD0
+
+    resize .text:0x802B31F0 0x4C0
+    offset .text:0x802B36d0 +0xB0
+
+    # dropped KPRProcessDeadKeys
+    delete .text:0x8039B2D0
+    insert .text:0x8039B2D0 KPRProcessRomaji = .text:0x8039B380; // type:function size:0x548
+    split_offset .text:0x8039B43B +0x490
+    offset .text:0x8039b440 +0x490
+
+    # .ctors
+    offset .ctors:0x804dbb00 +0x4a0
+
+    # .dtors
+    offset .dtors:0x804dbea0 +0x4a0
+
+    # .rodata
+    offset .rodata:0x804dbec0 +0x4a0
+
+    delete .rodata:0x804DCB70
+    delete .rodata:0x804DCBE8
+    delete .rodata:0x804DCC60
+    delete .rodata:0x804DCCF8
+    delete .rodata:0x804DCD80
+    delete .rodata:0x804DCE08
+    delete .rodata:0x804DCEE4
+    delete .rodata:0x804DCF64
+    delete .rodata:0x804DCFE4
+    split_offset .rodata:0x804DD0AF +0x48
+    offset .rodata:0x804DD0B0 +0x48
+
+    delete .rodata:0x804E3EA0
+    delete .rodata:0x804E3EB0
+    offset .rodata:0x804e40f0 -0x208
+
+    delete .rodata:0x804EEBC0
+    delete .rodata:0x804EEBE8
+    offset .rodata:0x804eec10 -0x258
+
+    # align
+    split_offset .rodata:0x804f091f -0x260
+    offset .rodata:0x804f0920 -0x260
+
+    delete .rodata:0x804F53F0
+    insert .rodata:0x804F53F0 kprRmJpRule = .rodata:0x804F5190; // type:object size:0xA28 data:byte
+    offset .rodata:0x804F5678 +0x540
+
+
+    # .data
+    offset .data:0x804fd540 +0x540
+
+    delete .data:0x805038E0
+    delete .data:0x805038EC
+    delete .data:0x805038F8
+    split_offset .data:0x8050391f +0x520
+    offset .data:0x80503920 +0x520
+
+    resize .data:0x80503920 0x9690
+    split_offset .data:0x8050A717 +0x2DB8
+    offset .data:0x8050A718 +0x2DB8
+    
+    # todo insert "baseline" string symbol
+    offset .data:0x80510C6C +0x2DC4
+
+    # align
+    split_offset .data:0x80510CFF +0x2DC0
+    offset .data:0x80510D00 +0x2DC0
+
+    delete .data:0x8052BCDC
+    delete .data:0x8052BCEC
+    offset .data:0x8052BCF8 +0x2DA4
+
+    # align
+    offset .data:0x8052BDF0 +0x2DA8
+
+    delete .data:0x8053802C
+    delete .data:0x80538038
+    offset .data:0x80538044 +0x2D90
+    
+    delete .data:0x80538050
+    delete .data:0x80538064
+    offset .data:0x80538078 +0x2D68
+
+    # align
+    offset .data:0x80547240 +0x2D60
+
+    # todo insert "csdtw" string symbol
+    split_offset .data:0x8054DD6F +0x2D68
+    offset .data:0x8054DD70 +0x2D68
+
+    # align
+    offset .data:0x8054DF00 +0x2D80
+
+
+    # .sdata
+    offset .sdata:0x80571920 +0x2d80
+
+    # todo insert gameover string array
+    offset .sdata:0x80573310 +0x2D88
+
+    delete .sdata:0x80573740
+    delete .sdata:0x80573748
+    delete .sdata:0x80573750
+    # todo insert new string
+    offset .sdata:0x80573758 +0x2D78
+
+    # .sbss
+    offset .sbss:0x80575480 +0x2d80
+
+
+    # .sdata2
+    offset .sdata2:0x80576ea0 +0x2d80
+
+    delete .sdata2:0x80579D14
+    delete .sdata2:0x80579D18
+    delete .sdata2:0x80579D20
+    delete .sdata2:0x80579D24
+
+    split_offset .sdata2:0x80579D27 +0x2D70
+    offset .sdata2:0x80579D28 +0x2D70
+
+    delete .sdata2:0x80579D48
+
+    offset .sdata2:0x80579D50 +0x2D70
+
+    delete .sdata2:0x80579d6c
+    delete .sdata2:0x80579d70
+    delete .sdata2:0x80579d74
+    delete .sdata2:0x80579d78
+    # align
+    offset .sdata2:0x80579D80 +0x2D68
+
+    # align
+    offset .sdata2:0x8057B640 +0x2D60
+
+    # kpr_lib sdata2
+    offset .sdata2:0x8057EAC8 +0x2D68
+
+    # align
+    offset .sdata2:0x8057F920 +0x2D60
+
+    # .sbss2
+    offset .sbss2:0x80580480 +0x2d60
+
+    # .bss
+    offset .bss:0x80580500 +0x2d80
+
+
+module: d_SoftwareKeyboardNP
+    # .text
+    resize .text:0x00000260 0x54
+    offset .text:0x000002F0 -0x30
+
+    resize .text:0x00000710 0x1E8
+    offset .text:0x00000940 -0x70
+
+    resize .text:0x00000BB0 0x3F8
+    offset .text:0x00000D40 +0x200
+
+    resize .text:0x00001000 0x308
+    offset .text:0x000013D0 +0x140
+
+    delete .text:0x00001410
+    delete .text:0x00001420
+    offset .text:0x00001430 +0x120
+
+    delete .text:0x00001BC0
+    offset .text:0x00001BD0 +0x110
+
+    resize .text:0x00001F00 0x3A8
+    offset .text:0x000022D0 +0xF0
+
+    delete .text:0x000252E0
+    # todo insert function
+    offset .text:0x000252F0 +0x100
+
+    resize .text:0x00026940 0x74
+    offset .text:0x000269B0 +0x110
+
+    # todo insert function
+    delete .text:0x0002AF80
+    offset .text:0x0002AF90 +0x120
+
+    # .rodata
+    resize .rodata:0x00000010 0x308
+    offset .rodata:0x00000098 +0x28C
+
+    delete .rodata:0x000000BC
+    offset .rodata:0x000000C0 +0x288
+
+    # .data
+    offset .data:0x00000300 +0x6C
+    offset .data:0x00000438 +0x70
+
+module: d_s_bootNP
+    # .text
+    resize .text:0x000004A0 0x108
+    offset .text:0x00000620 -0x70
+
+    resize .text:0x00000860 0x1F8
+    offset .text:0x00000B50 -0x160
+
+    # .data
+    # TODO this will need to be updated if symbols.txt is touched
+    # since this is a large pool label...
+    resize .data:0x00000568 0x214
+    offset .data:0x00000794 -0x18
+    delete .data:0x000007A0
+    delete .data:0x000007A4
+    delete .data:0x000007A8
+    delete .data:0x000007AC
+    offset .data:0x000007B0 -0x20
+
+module: d_lyt_file_selectNP
+    # .text
+    resize .text:0x00005C90 0x494
+    offset .text:0x00006400 -0x2D0
+
+    # .data
+    # TODO this will need to be updated if symbols.txt is touched
+    # since this is a large pool label...
+    resize .data:0x00000A9C 0x1F8
+    offset .data:0x00000CDC -0x48
+
+module: d_lyt_title_BGNP
+    # .text
+    resize .text:0x00000400 0xA8
+    offset .text:0x000004E0 -0x30
+
+    # .rodata
+    delete .rodata:0x0000005C
+    delete .rodata:0x00000060
+    split_offset .rodata:0x00000063 -0x8
+    offset .rodata:0x00000064 -0x8

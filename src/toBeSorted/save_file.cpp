@@ -103,6 +103,19 @@ void SaveFile::setAreaT2(char *name) {
 s8 *SaveFile::getAreaT2() {
     return area_t2;
 }
+#if BUILD_REVISION >= REV_NTSC_R1
+void SaveFile::setAreaT3(char *name) {
+    char nameCopy[32];
+    memset(nameCopy, 0, 32);
+
+    for (int i = 0; i < sizeof(nameCopy) - 1; i++) {
+        nameCopy[i] = name[i];
+    }
+    for (int i = 0; i < sizeof(nameCopy); i++) {
+        area_t3[i & 0x1F] = nameCopy[i];
+    }
+}
+#endif
 // 0x80009D20   getAreaT3__8SaveFileFv
 s8 *SaveFile::getAreaT3() {
     return area_t3;

@@ -186,4 +186,9 @@ private:
 #define AT_ADDRESS(xyz)
 #endif
 
+#define REV_NTSC_R0 305424
+#define REV_PAL_R0 305490
+#define REV_NTSC_R1 305590
+#define REV_NTSC_R2 305758
+
 #endif

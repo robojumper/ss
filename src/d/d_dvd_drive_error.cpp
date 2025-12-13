@@ -108,7 +108,7 @@ void dDvdDriveError_c::draw() {
     const wchar_t *str;
     if (lang == D_LANG_FR) {
         str = sErrorsFr[idx];
-    } else if (lang == D_LANG_ES) {
+    } else if (lang == D_LANG_SP) {
         str = sErrorsEs[idx];
     } else {
         str = sErrorsEn[idx];

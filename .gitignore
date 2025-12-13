@@ -34,3 +34,10 @@ compile_commands.json
 # Miscellaneous
 /*.txt
 *.exe
+
+# Generated symbols / splits
+config/**/splits.txt
+config/**/symbols.txt
+# except the original SOUE01 ones
+!config/SOUE01/**/splits.txt
+!config/SOUE01/**/symbols.txt

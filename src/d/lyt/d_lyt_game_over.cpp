@@ -68,7 +68,7 @@ bool dLytGameOver_c::build() {
     s32 variant;
     if (lang == D_LANG_FR) {
         variant = 1;
-    } else if (lang == D_LANG_ES) {
+    } else if (lang == D_LANG_SP) {
         variant = 2;
     } else {
         variant = 0;

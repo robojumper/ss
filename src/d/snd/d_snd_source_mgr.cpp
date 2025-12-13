@@ -512,7 +512,7 @@ void dSndSourceMgr_c::unregisterSource(dSoundSource_c *source) {
         } else if (source == mpBoomerangSource) {
             mpBoomerangSource = nullptr;
         }
-
+        // field_0x3880 is missing - fixed in Rev 1
         if (mpTBoatSource == source) {
             mpTBoatSource = nullptr;
         }

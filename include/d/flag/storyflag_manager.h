@@ -37,6 +37,10 @@ public:
 
     static StoryflagManager *sInstance;
 
+    static StoryflagManager *GetInstance() {
+        return sInstance;
+    }
+
 private:
     static u16 sFlags[0x80];
 };

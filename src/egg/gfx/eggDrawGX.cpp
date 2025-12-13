@@ -121,7 +121,7 @@ static DrawGX sDrawGX;
 void DrawGX::Initialize(Heap *pHeap_) {
     2.0f; // cool+
 
-    static u8 s_clear_z_TX[64] = {
+    static ALIGN_DECL(32) u8 s_clear_z_TX[64] = {
         // clang-format off
         0x00,  0xFF,  0x00,  0xFF,
         0x00,  0xFF,  0x00,  0xFF,

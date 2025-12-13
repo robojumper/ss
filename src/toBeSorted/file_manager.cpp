@@ -1,5 +1,7 @@
 #include "toBeSorted/file_manager.h"
 
+#include "d/flag/itemflag_manager.h"
+#include "d/flag/storyflag_manager.h"
 #include "f/f_base.h"
 #include "m/m_heap.h"
 #include "s/s_Crc.h"
@@ -66,6 +68,36 @@ wchar_t *FileManager::getFileHeroname(int fileNum) {}
 s64 FileManager::getFileSaveTime(int fileNum) {}
 s16 FileManager::getFileCurrentHealth(int fileNum) {}
 s16 FileManager::getFileHealthCapacity(int fileNum) {}
+
+#if BUILD_REVISION >= REV_NTSC_R2
+void FileManager::fixSothBug() {
+    ItemflagManager *itemMgr = ItemflagManager::GetInstance();
+    StoryflagManager *storyMgr = StoryflagManager::GetInstance();
+
+    if (itemMgr->getFlagDirect(ITEM_FARON_SOTH) && itemMgr->getFlagDirect(ITEM_ELDIN_SOTH)) {
+        return;
+    }
+
+    if (storyMgr->getFlag(STORYFLAG_828) && !storyMgr->getFlag(STORYFLAG_829)) {
+        storyMgr->unsetFlag(STORYFLAG_828);
+        storyMgr->setFlag(STORYFLAG_829);
+
+        if (itemMgr->getFlagDirect(ITEM_LANAYRU_SOTH)) {
+            if (storyMgr->getFlag(STORYFLAG_175) && !storyMgr->getFlag(STORYFLAG_ELDIN_VOLCANO_CAN_ERUPT)) {
+                if (itemMgr->getFlagDirect(ITEM_FARON_SOTH) && !itemMgr->getFlagDirect(ITEM_ELDIN_SOTH)) {
+                    storyMgr->setFlag(STORYFLAG_ELDIN_VOLCANO_CAN_ERUPT);
+                } else if (!itemMgr->getFlagDirect(ITEM_FARON_SOTH) && itemMgr->getFlagDirect(ITEM_ELDIN_SOTH)) {
+                    storyMgr->unsetFlag(STORYFLAG_175);
+                } else if (!itemMgr->getFlagDirect(ITEM_FARON_SOTH) && !itemMgr->getFlagDirect(ITEM_ELDIN_SOTH)) {
+                    storyMgr->unsetFlag(STORYFLAG_175);
+                    storyMgr->setFlag(STORYFLAG_ELDIN_VOLCANO_CAN_ERUPT);
+                }
+            }
+        }
+    }
+}
+#endif
+
 void FileManager::fn_8000A2E0() {
     // maybe call this function "reset"
     mIsFileUnk1[0] = true;

@@ -106,6 +106,9 @@ public:
     char *getAreaT1();
     void setAreaT2(char *name);
     s8 *getAreaT2();
+#if BUILD_REVISION >= REV_NTSC_R1
+    void setAreaT3(char *name);
+#endif
     s8 *getAreaT3();
 };
 

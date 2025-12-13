@@ -1,0 +1,55 @@
+base: SOUP01
+
+module: MAIN
+    # .init
+    offset .init:0x80004000 +0x0
+
+    # extab
+    offset extab:0x80006720 +0x0
+
+    # extabindex
+    offset extabindex:0x80006920 +0x0
+
+    # .text
+    offset .text:0x80006C20 +0x0
+    
+    resize .text:0x800B0670 0x9B0
+    offset .text:0x800B0FA0 +0x80
+
+    resize .text:0x80346430 0xA0
+    offset .text:0x80346460 +0x100
+    resize .text:0x80346460 0xA4
+    offset .text:0x803464A0 +0x170
+    
+    resize .text:0x80385400 0xD8
+    offset .text:0x803854C0 +0x190
+    
+    # .ctors
+    offset .ctors:0x804DBDE0 +0x1A0
+
+    # .dtors
+    offset .dtors:0x804DC180 +0x1A0
+
+    # .rodata
+    offset .rodata:0x804DC1A0 +0x1A0
+
+    # .data
+    offset .data:0x804FDBA0 +0x1A0
+
+    # .sdata
+    offset .sdata:0x805729C0 +0x1A0
+
+    # .sbss
+    offset .sbss:0x80576540 +0x1A0
+
+    # .sdata2
+    offset .sdata2:0x80577F60 +0x1A0
+    split_offset .sdata2:0x8057AD8F +0x1A8
+    offset .sdata2:0x8057AD90 +0x1A8
+    offset .sdata2:0x8057C700 +0x1A0
+
+    # .sbss2
+    offset .sbss2:0x80581540 +0x1A0
+
+    # .bss
+    offset .bss:0x80581580 +0x200

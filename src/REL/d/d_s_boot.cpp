@@ -62,7 +62,15 @@ sFPhaseBase::sFPhaseState dScBoot_c::cb1() {
     LayoutArcManager::GetInstance()->loadLayoutArcFromDisk("cursor", mHeap::g_archiveHeap);
     LayoutArcManager::GetInstance()->loadLayoutArcFromDisk("CursorStick", mHeap::g_archiveHeap);
     LayoutArcManager::GetInstance()->loadLayoutArcFromDisk("System2D", nullptr);
-    LayoutArcManager::GetInstance()->loadLayoutArcFromDisk("saveBannerU", nullptr);
+    LayoutArcManager::GetInstance()->loadLayoutArcFromDisk(
+#if BUILD_REGION_NTSC
+        "saveBannerU"
+#elif BUILD_REGION_PAL || BUILD_REGION_JP
+        "saveBannerJ"
+#endif
+        ,
+        nullptr
+    );
 
     for (int i = 0; i < 6; i++) {
         SizedString<128> str;
@@ -81,8 +89,15 @@ sFPhaseBase::sFPhaseState dScBoot_c::cb2() {
         return sFPhaseBase::PHASE_RETRY;
     }
 
-    TPLPalette *tpl =
-        static_cast<TPLPalette *>(LayoutArcManager::GetInstance()->getData("saveBannerU", "tmp/saveBanner.tpl"));
+    TPLPalette *tpl = static_cast<TPLPalette *>(LayoutArcManager::GetInstance()->getData(
+#if BUILD_REGION_NTSC
+        "saveBannerU"
+#elif BUILD_REGION_PAL || BUILD_REGION_JP
+        "saveBannerJ"
+#endif
+        ,
+        "tmp/saveBanner.tpl"
+    ));
     TPLBind(tpl);
 
     return sFPhaseBase::PHASE_NEXT;
@@ -132,16 +147,26 @@ sFPhaseBase::sFPhaseState dScBoot_c::cb6() {
     LayoutArcManager::GetInstance()->loadLayoutArcFromDisk("Main2D", nullptr);
     LayoutArcManager::GetInstance()->loadLayoutArcFromDisk("DoButton", nullptr);
     LayoutArcManager::GetInstance()->loadLayoutArcFromDisk("MenuHelp", nullptr);
+#if BUILD_REGION_JP
+    LayoutArcManager::GetInstance()->loadLayoutArcFromDisk("gameOver_01", nullptr);
+#else
+#if BUILD_REGION_NTSC
     u8 result = getCurrentLanguage1();
     s32 gameOverType;
     if (result == D_LANG_FR) {
         gameOverType = 1;
-    } else if (result == D_LANG_ES) {
+    } else if (result == D_LANG_SP) {
         gameOverType = 2;
     } else {
         gameOverType = 0;
     }
-
+#elif BUILD_REGION_PAL
+    if (result == D_LANG_SP) {
+        gameOverType = 2;
+    } else {
+        gameOverType = 0;
+    }
+#endif
     if (gameOverType == 0) {
         LayoutArcManager::GetInstance()->loadLayoutArcFromDisk("gameOver_01", nullptr);
     } else if (gameOverType == 1) {
@@ -149,6 +174,7 @@ sFPhaseBase::sFPhaseState dScBoot_c::cb6() {
     } else {
         LayoutArcManager::GetInstance()->loadLayoutArcFromDisk("gameOver_03", nullptr);
     }
+#endif
 
     if (OarcManager::GetInstance()->checkIfObjectArcExistsOnDisk("ObjectPack")) {
         OarcManager::GetInstance()->loadObjectArcFromDisk("ObjectPack", mHeap::g_archiveHeap);
@@ -340,13 +366,31 @@ dScBoot_c::strap_c::strap_c() {
     mArcName.empty();
     mLytFileName.empty();
     mAnimFileName.empty();
+#if BUILD_REGION_NTSC
     if (langNum == D_LANG_FR) {
         str = "F";
-    } else if (langNum == D_LANG_ES) {
+    } else if (langNum == D_LANG_SP) {
         str = "S";
     } else {
         str = "U";
     }
+#elif BUILD_REGION_PAL
+    if (langNum == D_LANG_FR) {
+        str = "F";
+    } else if (langNum == D_LANG_SP) {
+        str = "S";
+    } else if (langNum == D_LANG_DE) {
+        str = "G";
+    } else if (langNum == D_LANG_IT) {
+        str = "I";
+    } else if (langNum == D_LANG_NL) {
+        str = "D";
+    } else {
+        str = "E";
+    }
+#elif BUILD_REGION_JP
+    str = "J";
+#endif
     // UB: Cannot pass object of non-POD type 'SizedString<8>' through variadic method
     mArcName.sprintf("strap%s", str);
     mLytFileName.sprintf("strap_00_%s.brlyt", str);

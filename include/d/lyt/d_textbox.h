@@ -82,7 +82,7 @@ private:
 
     f32 resizeTextToFit(f32 maxWidth);
     bool hasDynamicText();
-    void someDebugCheckMaybe();
+    void loadBaseline();
 
     int GetStoredLineStrNum(int i, f32 *pLineWidth, bool *pbOver) const {
         *pbOver = mbOvers[i];
@@ -110,7 +110,7 @@ private:
     /* 0x1C4 */ f32 mLineWidths[10];
     /* 0x1EC */ bool mbOvers[10];
     /* 0x1F6 */ bool mIsShadowTextBox;
-    /* 0x1F7 */ u8 field_0x1F7;
+    /* 0x1F7 */ u8 mBaseline;
     /* 0x1F8 */ u8 field_0x1F8;
     /* 0x1F9 */ bool field_0x1F9;
     /* 0x1FA */ u8 field_0x1FA;

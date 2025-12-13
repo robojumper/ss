@@ -999,11 +999,13 @@ void dTagProcessor_c::fn_800B4FF0(nw4r::ut::Rect *rect, nw4r::ut::PrintContext<w
 
         f32 lineWidth = getLineWidth(arg);
         f32 margin = (textBoxSize.width - lineWidth) / 2.0f;
+#if !BUILD_REGION_JP
         if ((mMsgWindowSubtype < dLytMsgWindow_c::MSG_WINDOW_WOOD ||
              mMsgWindowSubtype > dLytMsgWindow_c::MSG_WINDOW_LINK) &&
             mMsgWindowSubtype != dLytMsgWindow_c::MSG_WINDOW_DEMO) {
             margin = 0.0f;
         }
+#endif
         if (margin > 0.0f) {
             ctx->writer->MoveCursorX(margin);
         }
@@ -1291,10 +1293,21 @@ wchar_t *dTagProcessor_c::writeSingularOrPluralWord(wchar_t *dest, wchar_t *src,
 
     int i = 0;
     SizedString<32> mName;
+
+#if BUILD_REGION_JP
+    s32 amount = 0;
+    if (mFirstNumericArg > 0) {
+        amount = mFirstNumericArg % 10;
+        if (amount == 0) {
+            amount = 10;
+        }
+    }
+#else
     s32 amount = 2;
     if (shouldUseSingular(mFirstNumericArg)) {
         amount = 1;
     }
+#endif
     mName.sprintf("lang:word:%03d:%02d", itemIndex, amount);
     MsbtInfo *info = dMessage_c::getMsbtInfoForIndex(/* word */ 18);
     const wchar_t *text = LMS_GetTextByLabel(info, mName);
@@ -1329,6 +1342,7 @@ wchar_t *dTagProcessor_c::writeSingularOrPluralWord(wchar_t *dest, wchar_t *src,
 }
 
 wchar_t *dTagProcessor_c::writeSingleCharacter(wchar_t character, wchar_t *dst, s32 *pOutLen) {
+#if !BUILD_REGION_JP
     if (field_0xEF1) {
         field_0xEF1 = 0;
         wchar_t replacementSequence[3];
@@ -1346,12 +1360,15 @@ wchar_t *dTagProcessor_c::writeSingleCharacter(wchar_t character, wchar_t *dst, 
         }
         return dst;
     } else {
+#endif
         *dst = character;
         if (pOutLen != nullptr) {
             (*pOutLen)++;
         }
         return dst + 1;
+#if !BUILD_REGION_JP
     }
+#endif
 }
 
 void dTagProcessor_c::fn_800B60E0(u8 cmdLen, wchar_t *ptr) {
@@ -1824,7 +1841,9 @@ f32 dTagProcessor_c::fn_800B8040(s8 factor, u32 windowType) {
             case 1:  x = 0.95f; break;
             case 2:  x = 1.1f; break;
         }
+#if !BUILD_REGION_JP
         x *= dLyt_HIO_c::getFn800B1F10();
+#endif
         return x * f1;
     }
 }
@@ -1959,7 +1978,11 @@ s32 dTagProcessor_c::getMaxNumLines(s32 windowType) {
     } else if (windowType == dLytMsgWindow_c::MSG_WINDOW_DEMO) {
         return 2;
     }
+#if BUILD_REGION_JP
+    return 3;
+#else
     return 4;
+#endif
 }
 
 void dTagProcessor_c::getTextCommand(

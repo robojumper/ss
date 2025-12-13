@@ -56,6 +56,10 @@ public:
 
     static ItemflagManager *sInstance;
 
+    static ItemflagManager *GetInstance() {
+        return sInstance;
+    }
+
     void setItemflag(u16 flag) {
         setFlag(flag | MASK);
     }

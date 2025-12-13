@@ -15,6 +15,7 @@
 #include "nw4r/lyt/lyt_resources.h"
 #include "nw4r/lyt/lyt_textBox.h"
 #include "nw4r/lyt/lyt_types.h"
+#include "nw4r/ut/ut_CharStrmReader.h"
 #include "nw4r/ut/ut_CharWriter.h"
 #include "nw4r/ut/ut_Font.h"
 #include "nw4r/ut/ut_Rect.h"
@@ -473,7 +474,7 @@ void dTextBox_c::init() {
     mFixedWidth = 0.0f;
     mHasTextWriter = true;
     mIsShadowTextBox = false;
-    field_0x1F7 = 0;
+    mBaseline = 0;
     field_0x1F9 = false;
     field_0x1FA = 0;
     field_0x1F8 = 2;
@@ -548,8 +549,8 @@ bool dTextBox_c::hasDynamicText() {
     return false;
 }
 
-void dTextBox_c::someDebugCheckMaybe() {
-    field_0x1F7 = 0;
+void dTextBox_c::loadBaseline() {
+    mBaseline = 0;
 
     // Everything below this is effectively no-ops, since
     // we check and compare a bunch of things but don't actually
@@ -564,6 +565,12 @@ void dTextBox_c::someDebugCheckMaybe() {
     for (int i = 0; i < myNum; myList++, i++) {
         SizedString<0x40> userDatName;
         userDatName = myList->GetName();
+#if BUILD_REGION_JP
+        if (userDatName == "baseline" && myList->GetType() == nw4r::lyt::res::TYPE_INT) {
+            mBaseline = myList->GetInt();
+            return;
+        }
+#endif
 
         if (userDatName == "copy" && myList->GetType() == nw4r::lyt::res::TYPE_STRING) {
             dTextBox_c *other = mpLytBase->getTextBox(myList->GetString());
@@ -576,6 +583,13 @@ void dTextBox_c::someDebugCheckMaybe() {
                 for (int j = 0; j < otherNum; j++) {
                     SizedString<0x40> otherName;
                     otherName = otherList->GetName();
+#if BUILD_REGION_JP
+                    if (otherName == "baseline" && otherList->GetType() == nw4r::lyt::res::TYPE_INT) {
+                        mBaseline = otherList->GetInt();
+                        field_0x1F8 = other->field_0x1F8;
+                        return;
+                    }
+#endif
                     otherList++;
                 }
             }
@@ -595,9 +609,8 @@ void dTextBox_c::DrawSelf(const nw4r::lyt::DrawInfo &drawInfo) {
     nw4r::ut::Rect textRect;
     if (mHasTextWriter) {
         field_0x1F9 = false;
-        someDebugCheckMaybe();
-        nw4r::ut::Rect resultRect = GetMyTextDrawRect(&writer, &field_0x1F9);
-        textRect = resultRect;
+        loadBaseline();
+        textRect = GetMyTextDrawRect(&writer, &field_0x1F9);
         mTextWriter = writer;
         field_0x188 = textRect;
     } else {
@@ -622,11 +635,11 @@ void dTextBox_c::DrawSelf(const nw4r::lyt::DrawInfo &drawInfo) {
     } else {
         unk1 = field_0x1F8 == 1;
     }
-    if (field_0x1F7 == 1 || (field_0x1F7 == 2 && unk1)) {
+    if (mBaseline == 1 || (mBaseline == 2 && unk1)) {
         f32 f = GetFontSize().height * dLyt_HIO_c::getField0x75C();
         textRect.top -= f;
         textRect.bottom -= f;
-    } else if (field_0x1F7 == 3 && unk1) {
+    } else if (mBaseline == 3 && unk1) {
         f32 f = GetFontSize().height * dLyt_HIO_c::getField0x760();
         textRect.top -= f;
         textRect.bottom -= f;
@@ -660,15 +673,31 @@ void dTextBox_c::DrawSelf(const nw4r::lyt::DrawInfo &drawInfo) {
     int i = 0;
 
     if (field_0x1FA != 0) {
-        // The original variant from nw4r::lyt
+#if BUILD_REGION_PAL && BUILD_REVISION >= 305623
+        f32 posY = GetGlobalMtx()._13;
+        nw4r::ut::CharStrmReader reader = writer.GetFont()->GetCharStrmReader();
+#endif
+        // The original variant from nw4r::lyt. Modified again in SOUP01_R1
         int remain = mTextLen;
         while (remain > 0) {
             bool bOver;
             f32 lineWidth;
             int lineStrNum = CalcLineStrNum(&lineWidth, &writer, strPos, remain, mSize.width, &bOver);
-            f32 textPosX = textRect.left + hMag * (texWidth - lineWidth);
-            writer.SetCursorX(textPosX);
-            writer.PrintMutable(strPos, lineStrNum);
+#if BUILD_REGION_PAL && BUILD_REVISION >= 305623
+            reader.Set(strPos);
+            s32 next = reader.Next();
+            f32 diff = writer.GetCursorY() - posY;
+            if (next >= L' ' && (diff < -300.0f || diff > 300.0f)) {
+                bOver = true;
+            } else {
+#endif
+                f32 textPosX = textRect.left + hMag * (texWidth - lineWidth);
+                writer.SetCursorX(textPosX);
+                writer.PrintMutable(strPos, lineStrNum);
+#if BUILD_REGION_PAL && BUILD_REVISION >= 305623
+            }
+#endif
+
             if (bOver) {
                 writer.PrintMutable(L"\n", 1);
             }

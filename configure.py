@@ -28,10 +28,17 @@ from tools.project import (
 
 # Game versions
 DEFAULT_VERSION = 0
-VERSIONS = [
-    "SOUE01",  # 0
-    "SOUP01",  # 1
+VERSION_DATA = [
+    ["SOUE01", "NTSC", 305424],
+    ["SOUP01", "PAL", 305490],
+    ["SOUK01", "KOR", 305590],
+    ["SOUE01_R1", "NTSC", 305590],
+    ["SOUJ01", "JP", 305590],
+    ["SOUP01_R1", "PAL", 305623],
+    ["SOUP01_R2", "PAL", 305758],
+    ["SOUE01_R2", "NTSC", 305758],
 ]
+VERSIONS = [v[0] for v in VERSION_DATA]
 
 parser = argparse.ArgumentParser()
 parser.add_argument(
@@ -159,7 +166,7 @@ if not config.non_matching:
 # Tool versions
 config.binutils_tag = "2.42-1"
 config.compilers_tag = "20250812"
-config.dtk_tag = "v1.7.1"
+config.dtk_tag = "v1.7.5"
 config.objdiff_tag = "v3.4.1"
 config.sjiswrap_tag = "v1.2.2"
 config.wibo_tag = "1.0.0-beta.5"
@@ -199,6 +206,9 @@ config.extra_clang_flags = [
     "-fshort-wchar",
 ]
 
+region = VERSION_DATA[version_num][1]
+revision = VERSION_DATA[version_num][2]
+
 # Base flags, common to most GC/Wii games.
 # Generally leave untouched, with overrides added below.
 cflags_base = [
@@ -222,6 +232,8 @@ cflags_base = [
     "-i include",
     f"-i build/{config.version}/include",
     f"-DBUILD_VERSION={version_num}",
+    f"-DBUILD_REVISION={revision}",
+    f"-DBUILD_REGION_{region}=1",
     f"-DVERSION_{config.version}",
     "-i src",
     "-i src/PowerPC_EABI_Support/MSL/MSL_C/MSL_Common/Include",
