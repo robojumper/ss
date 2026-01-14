@@ -1,4 +1,6 @@
 #include "common.h"
+#include "d/a/d_a_player.h"
+#include "d/a/obj/d_a_obj_tbox.h"
 #include "d/d_font_manager.h"
 #include "d/d_sc_game.h"
 #include "d/d_sc_title.h"
@@ -14,6 +16,7 @@
 #include "d/snd/d_snd_sound.h"
 #include "m/m_color.h"
 #include "m/m_mtx.h"
+#include "m/m_vec.h"
 #include "nw4r/math/math_types.h"
 #include "nw4r/snd/snd_SoundArchivePlayer.h"
 #include "nw4r/snd/snd_SoundHandle.h"
@@ -85,6 +88,12 @@ extern "C" void fn_802EE0B0() {
         return;
     }
 
+    dAcPy_c *link = dAcPy_c::GetLinkM();
+    if (link == nullptr) {
+        return;
+    }
+    mVec3_c linkPos = link->getPosition();
+
     const nw4r::ut::Font *fnt = dFontMng_c::getFont(0);
     writer.SetFont(*fnt);
     writer.SetFontSize(10.0f);
@@ -101,6 +110,22 @@ extern "C" void fn_802EE0B0() {
     GXSetViewport(0.0f, 0.0f, 640.0f, 480.0f, 0.0f, 1.0f);
     GXLoadPosMtxImm(posMtx, 0);
     GXSetCurrentMtx(0);
+
+    dAcTbox_c *box = nullptr;
+    do {
+        box = static_cast<dAcTbox_c *>(fManager_c::searchBaseByProfName(fProfile::TBOX, box));
+
+        if (box != nullptr) {
+            SizedWString<128> str;
+            str.sprintf(
+                L"box %x, has set state: %s, rendered: %s, distance %.2f\n", box->mParams2,
+                box->hasSetActionState() ? "True" : "False", box->checkObjectProperty(0x2) ? "False" : "True",
+                (box->getPosition() - linkPos).length()
+            );
+            writeText(writer, str);
+        }
+
+    } while (box != nullptr);
 
     /*
     writeText(writer, L"lbl_80575DD8:\n");
@@ -149,7 +174,8 @@ extern "C" void fn_802EE0B0() {
     if (dSndDistantSoundActorPool_c::GetInstance() != nullptr) {
         ForeachSoundPrinter p(&writer);
         for (int i = 0; i < 0x40; i++) {
-            dSnd3DActor_c *ac = (dSnd3DActor_c *)(((char *)dSndDistantSoundActorPool_c::GetInstance()) + 0x10 + (0x108 * i));
+            dSnd3DActor_c *ac = (dSnd3DActor_c *)(((char *)dSndDistantSoundActorPool_c::GetInstance()) + 0x10 + (0x108 *
+    i));
             // writeText(writer, L"--------\n");
             ac->ForEachSound(p, false);
         }
@@ -172,6 +198,7 @@ extern "C" void fn_802EE0B0() {
     }
     */
 
+    /*
     if (dScGame_c::GetInstance() == nullptr) {
         return;
     }
@@ -181,7 +208,6 @@ extern "C" void fn_802EE0B0() {
         return;
     }
     timer = 30;
-
 
     SizedWString<128> str;
     str.sprintf(L"%d, %d", u1, u2);
@@ -197,4 +223,5 @@ extern "C" void fn_802EE0B0() {
     if (u1 == 0x39 + 0x14) {
         u1 = 0x39;
     }
+    */
 }

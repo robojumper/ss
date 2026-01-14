@@ -72,6 +72,10 @@ public:
         return mHasBeenOpened;
     }
 
+    bool hasSetActionState() const {
+        return field_0x120E;
+    }
+
 private:
     static f32 getSomeRate();
     bool initBgW(dBgW &bg, const char *arcName, const char *fileName);
